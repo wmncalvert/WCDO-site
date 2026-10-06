@@ -88,8 +88,7 @@ body.flying #mark { animation: none !important; }
 .s2 .flipset { --ja: center; --ta: center; }
 .fl-line { display: grid; position: relative; perspective: 1100px; }
 .fl-line > .l, .fl-line > .flap { grid-area: 1 / 1; }
-.fl-line::after, .fc::after { content: ""; position: absolute; left: 0; right: 0; top: 50%; height: 1px; background: var(--bg); z-index: 6; pointer-events: none; opacity: 0; }
-.fl-on::after { opacity: 1; }
+
 .l { display: flex; align-items: center; justify-content: var(--ja, center); text-align: var(--ta, center); backface-visibility: hidden; -webkit-backface-visibility: hidden; }
 .l > span { display: block; text-wrap: balance; }
 .l.t { clip-path: inset(0 0 50% 0); }
@@ -180,8 +179,7 @@ footer a { text-decoration: none; }
     </div>
     <div class="slide s2">
       <div class="flipset tag fx" id="hf" aria-hidden="true">
-        <div class="fl-line" data-a="We design and execute the path —" data-b="From Molecule to Market."></div>
-        <div class="fl-line" data-a="From innovation to value." data-b="From Drift to Dominance."></div>
+        <div class="fl-line" data-a="We design and execute the path —|From innovation to value." data-b="From Molecule to Market.|From Drift to Dominance."></div>
       </div>
       <p class="sr">We design and execute the path — From innovation to value. From Molecule to Market. From Drift to Dominance.</p>
     </div>
@@ -193,8 +191,7 @@ footer a { text-decoration: none; }
       <div class="sec">
         <span class="label fx">What we do</span>
         <div class="flipset big fx" id="wf" aria-hidden="true">
-          <div class="fl-line" data-a="We design and execute the path —" data-b="From Molecule to Market."></div>
-          <div class="fl-line" data-a="From innovation to value." data-b="From Drift to Dominance."></div>
+          <div class="fl-line" data-a="We design and execute the path —|From innovation to value." data-b="From Molecule to Market.|From Drift to Dominance."></div>
         </div>
         <p class="sr">We design and execute the path — From innovation to value. From Molecule to Market. From Drift to Dominance.</p>
       </div>
@@ -287,6 +284,7 @@ footer a { text-decoration: none; }
 
   /* Flip engine: a panel with a static top, a static bottom and a flap that turns over between them */
   var EASE = 'cubic-bezier(.5,0,.25,1)';
+  function fh(t) { return t.replace('|', '<br>'); }
   function flapInit(el, txt) {
     el.innerHTML = '<div class="l t"><span></span></div><div class="l b"><span></span></div><div class="flap"><div class="l f t"><span></span></div><div class="l k b"><span></span></div></div>';
     var c = el.children, fl = c[2];
@@ -294,16 +292,16 @@ footer a { text-decoration: none; }
     flapSet(el, txt);
   }
   function flapSet(el, txt) {
-    var L = el._L; L.tb.textContent = L.bb.textContent = L.f.textContent = L.k.textContent = txt; el._cur = txt;
+    var L = el._L; L.tb.innerHTML = L.bb.innerHTML = L.f.innerHTML = L.k.innerHTML = fh(txt); el._cur = txt;
   }
-  function flapStop(el) { if (el._an) { el._an.cancel(); el._an = null; flapSet(el, el._cur); } el.classList.remove('fl-on'); }
+  function flapStop(el) { if (el._an) { el._an.cancel(); el._an = null; flapSet(el, el._cur); } }
   function flapGo(el, txt, ms) {
     if (txt === el._cur) return;
     flapStop(el);
-    var L = el._L; L.tb.textContent = txt; L.k.textContent = txt; el._cur = txt; el.classList.add('fl-on');
+    var L = el._L; L.tb.innerHTML = fh(txt); L.k.innerHTML = fh(txt); el._cur = txt;
     var an = L.flap.animate([{ transform: 'rotateX(0deg)' }, { transform: 'rotateX(-180deg)' }], { duration: ms, easing: EASE, fill: 'forwards' });
     el._an = an;
-    an.onfinish = function () { if (el._an !== an) return; el._an = null; flapSet(el, txt); an.cancel(); el.classList.remove('fl-on'); };
+    an.onfinish = function () { if (el._an !== an) return; el._an = null; flapSet(el, txt); an.cancel(); };
   }
 
   /* The statements: "We design..." first, then "From Molecule...", and back, slowly and for as long as you stay */
@@ -312,12 +310,12 @@ footer a { text-decoration: none; }
     var ts = lines.map(function (l) { return [l.getAttribute('data-a'), l.getAttribute('data-b')]; });
     if (reduce) {
       root.innerHTML = ts.map(function (t) { return t[0]; }).concat(ts.map(function (t) { return t[1]; })).map(function (t, i) {
-        return '<p' + (i === ts.length ? ' style="margin-top:1em"' : '') + '>' + t + '</p>';
+        return '<p' + (i === ts.length ? ' style="margin-top:1em"' : '') + '>' + fh(t) + '</p>';
       }).join('');
       return { start: function () {}, stop: function () {} };
     }
     lines.forEach(function (l, i) { flapInit(l, ts[i][0]); });
-    var st = 0, tm = 0, tms = [], FLIP = 1300, STAG = 380, HOLD = 4400;
+    var st = 0, tm = 0, tms = [], FLIP = 1300, STAG = 0, HOLD = 4400;
     function clear() { clearTimeout(tm); tms.forEach(clearTimeout); tms = []; }
     function cycle() {
       st = st ? 0 : 1;
