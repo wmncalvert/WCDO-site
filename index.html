@@ -43,7 +43,8 @@ h1, h2, p { margin: 0; }
 .bar { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 10; background: var(--bg); margin-inline: calc(var(--gutter) * -1); padding-inline: var(--gutter); }
 .bar .wrap { display: flex; align-items: center; justify-content: space-between; gap: 16px; height: var(--hh); }
 .brand { display: inline-block; line-height: 1; text-decoration: none; font-weight: 300; font-size: 24px; letter-spacing: 0; }
-body[data-page="home"] .brand { visibility: hidden; }
+.brand { transition: opacity .5s ease; }
+body[data-page="home"] .brand { opacity: 0; pointer-events: none; }
 nav { display: flex; gap: clamp(16px, 3.5vw, 44px); margin-left: auto; }
 nav a { text-decoration: none; font-size: 13px; font-weight: 400; letter-spacing: 0.14em; text-transform: uppercase; padding-block: 6px; border-bottom: 1px solid transparent; transition: border-color .2s; }
 nav a:hover { border-bottom-color: var(--rule); }
@@ -52,6 +53,11 @@ nav a[aria-current="page"] { border-bottom-color: var(--fg); }
 /* Pages */
 .page { padding-block: clamp(24px, 5vw, 64px) clamp(72px, 10vw, 140px); }
 .page[hidden] { display: none !important; }
+.page { scroll-margin-top: var(--hh); }
+.page:not(.enter) .wi, .page:not(.enter) #mark { transform: translateY(110%); }
+.page:not(.enter) .fx { opacity: 0; }
+#p-home { min-height: calc(100vh - var(--hh)); min-height: calc(100svh - var(--hh)); }
+#p-what-we-do { padding-top: clamp(4px, 1.6vw, 20px); padding-bottom: clamp(32px, 5vw, 72px); }
 
 /* Type animation: words rise through a mask on entry and lift away on exit */
 .w { display: inline-block; overflow: hidden; vertical-align: top; padding-block: .14em; margin-block: -.14em; }
@@ -85,10 +91,10 @@ body.flying #mark { animation: none !important; }
 .tag { font-weight: 400; font-size: clamp(27px, 3.7vw, 72px); line-height: 1.18; letter-spacing: 0; text-wrap: balance; }
 
 /* What we do */
-.read { max-width: 1180px; margin-inline: auto; display: flex; flex-direction: column; gap: clamp(56px, 9vw, 144px); padding-top: clamp(24px, 5vw, 72px); }
+.read { max-width: 1180px; margin-inline: auto; display: flex; flex-direction: column; gap: clamp(28px, 4.5vw, 64px); padding-top: 0; }
 .big { font-weight: 300; font-size: clamp(32px, 4.5vw, 84px); line-height: 1.22; letter-spacing: 0; text-wrap: balance; }
 .sec { display: flex; flex-direction: column; gap: clamp(20px, 3vw, 40px); }
-.sec.rule { border-top: 1px solid var(--rule); padding-top: clamp(40px, 6vw, 96px); }
+.sec.rule { border-top: 1px solid var(--rule); padding-top: clamp(24px, 3.5vw, 48px); }
 /* Flip statements: each line is a split-flap panel that turns over like a flip clock */
 .sr { position: absolute; width: 1px; height: 1px; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 .flipset { display: flex; flex-direction: column; width: 100%; --ja: flex-start; --ta: left; }
@@ -98,14 +104,24 @@ body.flying #mark { animation: none !important; }
 
 .l { display: flex; align-items: center; justify-content: var(--ja, center); text-align: var(--ta, center); backface-visibility: hidden; -webkit-backface-visibility: hidden; }
 .l > span { display: block; text-wrap: balance; }
-.l.t { clip-path: inset(0 0 50% 0); }
-.l.b { clip-path: inset(50% 0 0 0); }
-.flap { display: grid; transform-style: preserve-3d; transform-origin: 50% 50%; will-change: transform; }
+.l.b { visibility: hidden; }
+.fl-on > .l, .flap > .l { background: var(--bg); }
+.fl-on > .l.t, .flap > .t { clip-path: inset(0 0 50% 0); }
+.fl-on > .l.b, .flap > .b { clip-path: inset(50% 0 0 0); }
+.fl-on > .l.b { visibility: visible; }
+.flap > .l { visibility: inherit; }
+.flap { display: grid; transform-style: preserve-3d; transform-origin: 50% 50%; visibility: hidden; }
+.fl-on > .flap { visibility: visible; will-change: transform; }
 .flap > .l { grid-area: 1 / 1; }
 .flap > .k { transform: rotateX(180deg); }
 .flipset.tag .fl-line, .flipset.big .fl-line { line-height: 1.2; }
-.copy { font-weight: 300; font-size: clamp(22px, 2.7vw, 48px); line-height: 1.32; letter-spacing: 0; display: flex; flex-direction: column; gap: clamp(32px, 5vw, 72px); }
+.copy { font-weight: 300; font-size: clamp(22px, 2.7vw, 48px); line-height: 1.32; letter-spacing: 0; display: flex; flex-direction: column; gap: clamp(28px, 4vw, 56px); }
 .copy p { text-wrap: pretty; }
+.steps { display: flex; align-items: flex-end; gap: 3.9%; }
+.step { display: flex; align-items: flex-end; justify-content: center; text-align: center; border: 1px solid var(--fg); font-weight: 400; font-size: clamp(14px, 2.1vw, 40px); line-height: 1.2; padding-inline: 12px; padding-bottom: calc(clamp(68px, 7.5vw, 140px) / 2 - 0.6em); }
+.step:nth-child(1) { width: 20.2%; height: clamp(68px, 7.5vw, 140px); }
+.step:nth-child(2) { width: 24%; height: clamp(90px, 9.9vw, 184px); }
+.step:nth-child(3) { width: 28.4%; height: clamp(112px, 12.6vw, 234px); }
 
 /* Work: one continuous film strip; the client name flips like a clock as you move across it */
 .work { display: flex; flex-direction: column; gap: clamp(18px, 2.6vw, 36px); padding-top: clamp(8px, 2vw, 28px); }
@@ -157,6 +173,7 @@ footer a { text-decoration: none; }
   nav { gap: 14px; }
   nav a { font-size: 11px; letter-spacing: 0.08em; }
   .s1 { min-height: 40vh; }
+  .step:nth-child(n) { width: auto; flex: 1 1 0; padding-inline: 6px; }
   .strip img { height: clamp(210px, 62vw, 340px); }
 }
 @media (prefers-reduced-motion: reduce) {
@@ -193,7 +210,7 @@ footer a { text-decoration: none; }
   </section>
 
   <!-- WHAT WE DO -->
-  <section class="page" id="p-what-we-do" data-page="what-we-do" hidden>
+  <section class="page" id="p-what-we-do" data-page="what-we-do">
     <div class="read">
       <div class="sec">
         <span class="label fx">What we do</span>
@@ -209,11 +226,16 @@ footer a { text-decoration: none; }
           <p data-t>In both cases, we do the same thing —<br>— pinpoint the position that wins, and build everything around it.</p>
         </div>
       </div>
+      <div class="steps" aria-label="From spark, to shape, to scale">
+        <div class="step fx">From Spark</div>
+        <div class="step fx">To Shape</div>
+        <div class="step fx">To Scale</div>
+      </div>
     </div>
   </section>
 
   <!-- WORK -->
-  <section class="page" id="p-work" data-page="work" hidden>
+  <section class="page" id="p-work" data-page="work">
     <div class="work">
       <div class="film-head fx"><div class="flipname" id="fname" aria-hidden="true"></div></div>
       <p class="sr" id="fsr" aria-live="polite">THINDOWN</p>
@@ -224,7 +246,7 @@ footer a { text-decoration: none; }
   </section>
 
   <!-- CONTACT -->
-  <section class="page" id="p-contact" data-page="contact" hidden>
+  <section class="page" id="p-contact" data-page="contact">
     <div class="contact">
       <div>
         <div class="contact-in">
@@ -301,14 +323,14 @@ footer a { text-decoration: none; }
   function flapSet(el, txt) {
     var L = el._L; L.tb.innerHTML = L.bb.innerHTML = L.f.innerHTML = L.k.innerHTML = fh(txt); el._cur = txt;
   }
-  function flapStop(el) { if (el._an) { el._an.cancel(); el._an = null; flapSet(el, el._cur); } }
+  function flapStop(el) { if (el._an) { el._an.cancel(); el._an = null; flapSet(el, el._cur); } el.classList.remove('fl-on'); }
   function flapGo(el, txt, ms) {
     if (txt === el._cur) return;
     flapStop(el);
-    var L = el._L; L.tb.innerHTML = fh(txt); L.k.innerHTML = fh(txt); el._cur = txt;
+    var L = el._L; L.tb.innerHTML = fh(txt); L.k.innerHTML = fh(txt); el._cur = txt; el.classList.add('fl-on');
     var an = L.flap.animate([{ transform: 'rotateX(0deg)' }, { transform: 'rotateX(-180deg)' }], { duration: ms, easing: EASE, fill: 'forwards' });
     el._an = an;
-    an.onfinish = function () { if (el._an !== an) return; el._an = null; flapSet(el, txt); an.cancel(); };
+    an.onfinish = function () { if (el._an !== an) return; el._an = null; flapSet(el, txt); an.cancel(); el.classList.remove('fl-on'); };
   }
 
   /* The statements: "We design..." first, then "From Molecule...", and back, slowly and for as long as you stay */
@@ -335,16 +357,14 @@ footer a { text-decoration: none; }
     };
   }
   var homeF = Flipper(document.getElementById('hf')), wwdF = Flipper(document.getElementById('wf'));
-  var focusT = 0;
-  function flipFor(h) {
-    homeF.stop(); wwdF.stop(); clearTimeout(focusT);
-    var hp = document.getElementById('p-home'); hp.classList.remove('focus');
-    if (h === 'home') {
-      /* the statement grows and the wordmark shrinks first, then the flipping begins */
-      if (reduce) hp.classList.add('focus');
-      else { focusT = setTimeout(function () { hp.classList.add('focus'); }, 1900); homeF.start(4400); }
-    } else if (h === 'what-we-do') wwdF.start();
+  var focusT = 0, hp = document.getElementById('p-home');
+  function homeOn() {
+    /* the statement grows and the wordmark shrinks first, then the flipping begins */
+    clearTimeout(focusT); hp.classList.remove('focus'); homeF.stop();
+    if (reduce) hp.classList.add('focus');
+    else { focusT = setTimeout(function () { hp.classList.add('focus'); }, 1900); homeF.start(4400); }
   }
+  function homeOff() { clearTimeout(focusT); homeF.stop(); }
 
   /* Work: all the images sit on one film strip; the name above flips letter by letter as the strip moves */
   var film = document.getElementById('film'), fname = document.getElementById('fname'), fbar = document.getElementById('fbar');
@@ -392,7 +412,7 @@ footer a { text-decoration: none; }
     return c;
   }
   function filmUpdate() {
-    if (current !== 'work' || !cells.length) return;
+    if (!workVis || !cells.length) return;
     var c = activeClient();
     if (c !== cActive) {
       cActive = c; setName(cNames[c]); fsr.textContent = cNames[c];
@@ -406,94 +426,57 @@ footer a { text-decoration: none; }
     requestAnimationFrame(function () { fTick = false; filmUpdate(); });
   }, { passive: true });
   function workEnter() {
-    film.scrollLeft = 0; buildName(); filmUpdate();
+    buildName(); filmUpdate();
   }
   fidx.addEventListener('click', function (e) {
     var b = e.target.closest('button'); if (!b) return;
     var c = +b.getAttribute('data-c'), im = fimgs.filter(function (i) { return +i.getAttribute('data-c') === c; })[0];
     film.scrollTo({ left: Math.max(0, im.offsetLeft - parseFloat(getComputedStyle(film).paddingLeft)), behavior: reduce ? 'auto' : 'smooth' });
   });
-  document.addEventListener('wheel', function (e) {
-    if (current !== 'work' || lbOpen() || !e.target.closest || !e.target.closest('.film')) return;
-    if (document.documentElement.scrollHeight > window.innerHeight + 2) return;
-    if (Math.abs(e.deltaY) > Math.abs(e.deltaX)) { film.scrollLeft += e.deltaY; e.preventDefault(); }
-  }, { passive: false });
-  window.addEventListener('resize', function () { if (current === 'work') { remeasure(); filmUpdate(); } });
-  if (document.fonts && document.fonts.ready) document.fonts.ready.then(function () { if (current === 'work') remeasure(); });
+  window.addEventListener('resize', function () { if (workVis) { remeasure(); filmUpdate(); } });
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(function () { if (workVis) remeasure(); });
 
-  function pageEl(h) { return document.getElementById('p-' + h); }
+  /* One long page: sections stack, the menu scrolls to them, scrolling keeps the menu and the animations in step */
+  var barEl = document.querySelector('.bar'), homeVis = false, wwdVis = false, workVis = false;
+  function secEl(h) { return document.getElementById('p-' + h); }
   function hashPage() { var h = (location.hash || '').replace('#', ''); return pages.indexOf(h) < 0 ? 'home' : h; }
   function setNav(h) {
     document.querySelectorAll('nav a').forEach(function (a) {
       if (a.getAttribute('data-link') === h) a.setAttribute('aria-current', 'page'); else a.removeAttribute('aria-current');
     });
   }
-  function show(h) {
-    pages.forEach(function (p) { var el = pageEl(p); el.hidden = p !== h; el.classList.remove('leave'); el.classList.remove('enter'); });
-    body.setAttribute('data-page', h); current = h; closeLb();
-    flipFor(h);
-    window.scrollTo(0, 0);
-    if (h === 'work') workEnter();
-    var pg = pageEl(h); void pg.offsetWidth;
-    if (!reduce) pg.classList.add('enter');
-  }
-
-  /* The wordmark flies between its big home position and the header */
-  function fly(fromEl, toEl, ms, done) {
-    var a = fromEl.getBoundingClientRect(), b = toEl.getBoundingClientRect();
-    var s1 = getComputedStyle(fromEl), s2 = getComputedStyle(toEl);
-    var c = document.createElement('div'); c.className = 'fly'; c.textContent = 'WCDO';
-    c.style.left = a.left + 'px'; c.style.top = a.top + 'px';
-    c.style.fontSize = s1.fontSize; c.style.fontWeight = s1.fontWeight;
-    document.body.appendChild(c); void c.offsetWidth;
-    c.style.transition = 'left ' + ms + 'ms cubic-bezier(.7,0,.15,1), top ' + ms + 'ms cubic-bezier(.7,0,.15,1), font-size ' + ms + 'ms cubic-bezier(.7,0,.15,1), font-weight ' + ms + 'ms linear';
-    c.style.left = b.left + 'px'; c.style.top = b.top + 'px';
-    c.style.fontSize = s2.fontSize; c.style.fontWeight = s2.fontWeight;
-    setTimeout(function () { c.remove(); if (done) done(); }, ms + 30);
-  }
-
-  function route() {
-    var h = hashPage();
-    if (h === current) return;
-    setNav(h);
-    if (current === null || reduce) { show(h); return; }
-    if (busy) return;
-    busy = true;
-    var from = current, out = pageEl(from);
-    out.classList.add('leave');
-    var t = out._leave, FLY = 900;
-    function finish() { busy = false; if (hashPage() !== current) route(); }
-    if (from === 'home') {
-      mark.style.visibility = 'hidden'; brand.style.visibility = 'hidden';
-      fly(mark, brand, FLY, function () { brand.style.visibility = ''; mark.style.visibility = ''; });
-      setTimeout(function () { show(h); }, t);
-      setTimeout(finish, Math.max(t, FLY) + 60);
-    } else if (h === 'home') {
-      setTimeout(function () {
-        body.classList.add('flying');
-        mark.style.visibility = 'hidden'; brand.style.visibility = 'hidden';
-        var startRect = brand.getBoundingClientRect(), bs = getComputedStyle(brand);
-        show('home');
-        // brand is hidden on home; start the clone where the header mark was
-        var c = document.createElement('div'); c.className = 'fly'; c.textContent = 'WCDO';
-        var b = mark.getBoundingClientRect(), ms = getComputedStyle(mark);
-        c.style.left = startRect.left + 'px'; c.style.top = startRect.top + 'px';
-        c.style.fontSize = bs.fontSize; c.style.fontWeight = bs.fontWeight;
-        document.body.appendChild(c); void c.offsetWidth;
-        var e = 'cubic-bezier(.7,0,.15,1)';
-        c.style.transition = 'left ' + FLY + 'ms ' + e + ', top ' + FLY + 'ms ' + e + ', font-size ' + FLY + 'ms ' + e + ', font-weight ' + FLY + 'ms linear';
-        c.style.left = b.left + 'px'; c.style.top = b.top + 'px';
-        c.style.fontSize = ms.fontSize; c.style.fontWeight = ms.fontWeight;
-        setTimeout(function () {
-          c.remove(); mark.style.visibility = ''; brand.style.visibility = '';
-          body.classList.remove('flying'); finish();
-        }, FLY + 30);
-      }, t);
-    } else {
-      setTimeout(function () { show(h); finish(); }, t);
+  function vis(id, hh, vh) { var r = secEl(id).getBoundingClientRect(); return r.bottom > hh + 80 && r.top < vh - 80; }
+  function update() {
+    var hh = barEl.offsetHeight, vh = window.innerHeight, act = 'home';
+    pages.forEach(function (p) { if (secEl(p).getBoundingClientRect().top <= hh + vh * 0.35) act = p; });
+    if (vh + window.pageYOffset >= document.documentElement.scrollHeight - 4) act = 'contact';
+    if (act !== current) {
+      current = act; body.setAttribute('data-page', act); setNav(act);
+      try { history.replaceState(null, '', act === 'home' ? location.pathname + location.search : '#' + act); } catch (e) {}
     }
+    pages.forEach(function (p) {
+      var el = secEl(p);
+      if (!el.classList.contains('enter') && el.getBoundingClientRect().top < vh * 0.82) el.classList.add('enter');
+    });
+    var h = vis('home', hh, vh), w = vis('what-we-do', hh, vh), k = vis('work', hh, vh);
+    if (h !== homeVis) { homeVis = h; if (h) homeOn(); else homeOff(); }
+    if (w !== wwdVis) { wwdVis = w; if (w) wwdF.start(); else wwdF.stop(); }
+    if (k !== workVis) { workVis = k; if (k) workEnter(); }
   }
-  window.addEventListener('hashchange', route);
+  var uTick = false;
+  function sched() { if (uTick) return; uTick = true; requestAnimationFrame(function () { uTick = false; update(); }); }
+  window.addEventListener('scroll', sched, { passive: true });
+  window.addEventListener('resize', sched);
+  function goTo(h, instant) {
+    var y = h === 'home' ? 0 : secEl(h).getBoundingClientRect().top + window.pageYOffset - barEl.offsetHeight + 1;
+    window.scrollTo({ top: Math.max(0, y), behavior: (reduce || instant) ? 'auto' : 'smooth' });
+  }
+  document.addEventListener('click', function (e) {
+    var a = e.target.closest && e.target.closest('a[href^="#"]'); if (!a) return;
+    var h = a.getAttribute('href').slice(1); if (pages.indexOf(h) < 0) return;
+    e.preventDefault(); goTo(h);
+  });
+  window.addEventListener('hashchange', function () { goTo(hashPage()); });
 
   /* Image strips: touch swipe is native; add mouse drag, a cursor label and a viewer */
   var drag = { on: false, el: null, x: 0, l: 0, moved: false };
@@ -552,7 +535,8 @@ footer a { text-decoration: none; }
     if (e.key === 'Escape') closeLb(); else if (e.key === 'ArrowLeft') stepLb(-1); else if (e.key === 'ArrowRight') stepLb(1);
   });
 
-  route();
+  if (hashPage() !== 'home') goTo(hashPage(), true);
+  update();
 })();
 </script>
 
