@@ -75,6 +75,13 @@ body.flying #mark { animation: none !important; }
 .s1 { min-height: min(44vh, 440px); }
 .s2 { min-height: min(32vh, 340px); }
 .wordmark { font-weight: 260; font-size: clamp(76px, 13.2vw, 260px); line-height: 1; letter-spacing: 0; }
+.wordmark { transition: font-size 1.6s var(--ease); }
+.s1, .s2 { transition: min-height 1.6s var(--ease); }
+.flipset.tag { transition: font-size 1.6s var(--ease); }
+#p-home.focus .wordmark { font-size: clamp(44px, 5.4vw, 104px); }
+#p-home.focus .s1 { min-height: min(24vh, 240px); }
+#p-home.focus .s2 { min-height: min(52vh, 520px); }
+#p-home.focus .flipset.tag { font-size: clamp(28px, 5.2vw, 100px); }
 .tag { font-weight: 400; font-size: clamp(27px, 3.7vw, 72px); line-height: 1.18; letter-spacing: 0; text-wrap: balance; }
 
 /* What we do */
@@ -323,14 +330,20 @@ footer a { text-decoration: none; }
       tm = setTimeout(cycle, FLIP + (lines.length - 1) * STAG + HOLD);
     }
     return {
-      start: function () { clear(); st = 0; lines.forEach(function (l, i) { flapStop(l); flapSet(l, ts[i][0]); }); tm = setTimeout(cycle, 3200); },
+      start: function (d) { clear(); st = 0; lines.forEach(function (l, i) { flapStop(l); flapSet(l, ts[i][0]); }); tm = setTimeout(cycle, d || 3200); },
       stop: clear
     };
   }
   var homeF = Flipper(document.getElementById('hf')), wwdF = Flipper(document.getElementById('wf'));
+  var focusT = 0;
   function flipFor(h) {
-    homeF.stop(); wwdF.stop();
-    if (h === 'home') homeF.start(); else if (h === 'what-we-do') wwdF.start();
+    homeF.stop(); wwdF.stop(); clearTimeout(focusT);
+    var hp = document.getElementById('p-home'); hp.classList.remove('focus');
+    if (h === 'home') {
+      /* the statement grows and the wordmark shrinks first, then the flipping begins */
+      if (reduce) hp.classList.add('focus');
+      else { focusT = setTimeout(function () { hp.classList.add('focus'); }, 1900); homeF.start(4400); }
+    } else if (h === 'what-we-do') wwdF.start();
   }
 
   /* Work: all the images sit on one film strip; the name above flips letter by letter as the strip moves */
