@@ -72,22 +72,9 @@ body.flying #mark { animation: none !important; }
 
 /* Home */
 .slide { display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
-.s1 { min-height: min(68vh, 720px); }
-.s2 { min-height: min(54vh, 560px); gap: clamp(28px, 5vw, 84px); }
+.s1 { min-height: min(44vh, 440px); }
+.s2 { min-height: min(32vh, 340px); }
 .wordmark { font-weight: 260; font-size: clamp(76px, 13.2vw, 260px); line-height: 1; letter-spacing: 0; }
-.story { height: 210vh; position: relative; }
-.story-pin { position: sticky; top: calc(var(--hh) + env(safe-area-inset-top, 0px)); height: calc(100vh - var(--hh)); height: calc(100svh - var(--hh)); display: flex; align-items: center; justify-content: center; text-align: center; }
-.story .morph { width: 100%; }
-.story .m-a, .story .m-b { display: flex; flex-direction: column; align-items: center; gap: clamp(28px, 5vw, 84px); }
-.story .morph[data-s="both"] { gap: clamp(48px, 8vw, 120px); }
-@keyframes soU { to { transform: translateY(-110%); } }
-@keyframes soD { to { transform: translateY(110%); } }
-@keyframes siU { from { transform: translateY(110%); } }
-@keyframes siD { from { transform: translateY(-110%); } }
-.story .morph .so-up .wi { animation: soU .6s cubic-bezier(.6, 0, .85, .35) forwards; animation-delay: calc(var(--k, 0) * 40ms); }
-.story .morph .so-down .wi { animation: soD .6s cubic-bezier(.6, 0, .85, .35) forwards; animation-delay: calc(var(--k, 0) * 40ms); }
-.story .morph .si-up .wi { animation: siU 1.05s var(--ease) backwards; animation-delay: calc(var(--k, 0) * 60ms + 60ms); }
-.story .morph .si-down .wi { animation: siD 1.05s var(--ease) backwards; animation-delay: calc(var(--k, 0) * 60ms + 60ms); }
 .tag { font-weight: 400; font-size: clamp(27px, 3.7vw, 72px); line-height: 1.18; letter-spacing: 0; text-wrap: balance; }
 
 /* What we do */
@@ -95,26 +82,42 @@ body.flying #mark { animation: none !important; }
 .big { font-weight: 300; font-size: clamp(32px, 4.5vw, 84px); line-height: 1.22; letter-spacing: 0; text-wrap: balance; }
 .sec { display: flex; flex-direction: column; gap: clamp(20px, 3vw, 40px); }
 .sec.rule { border-top: 1px solid var(--rule); padding-top: clamp(40px, 6vw, 96px); }
-.morph { display: grid; }
-.morph > * { grid-area: 1 / 1; }
-.morph[data-s="a"] .m-b, .morph[data-s="b"] .m-a { visibility: hidden; }
-.morph[data-s="both"] { display: flex; flex-direction: column; gap: clamp(32px, 5vw, 72px); }
-@keyframes upx { from { transform: translateY(110%); } }
-@keyframes outx { to { transform: translateY(-110%); } }
-.morph .m-a.out .wi { animation: outx .6s cubic-bezier(.6, 0, .85, .35) forwards; animation-delay: calc(var(--k, 0) * 18ms); }
-.morph .m-b.in .wi { animation: upx 1.05s var(--ease) backwards; animation-delay: calc(var(--k, 0) * 28ms + 60ms); }
+/* Flip statements: each line is a split-flap panel that turns over like a flip clock */
+.sr { position: absolute; width: 1px; height: 1px; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.flipset { display: flex; flex-direction: column; width: 100%; --ja: flex-start; --ta: left; }
+.s2 .flipset { --ja: center; --ta: center; }
+.fl-line { display: grid; position: relative; perspective: 1100px; }
+.fl-line > .l, .fl-line > .flap { grid-area: 1 / 1; }
+.fl-line::after, .fc::after { content: ""; position: absolute; left: 0; right: 0; top: 50%; height: 1px; background: var(--bg); z-index: 6; pointer-events: none; opacity: 0; }
+.fl-on::after { opacity: 1; }
+.l { display: flex; align-items: center; justify-content: var(--ja, center); text-align: var(--ta, center); backface-visibility: hidden; -webkit-backface-visibility: hidden; }
+.l > span { display: block; text-wrap: balance; }
+.l.t { clip-path: inset(0 0 50% 0); }
+.l.b { clip-path: inset(50% 0 0 0); }
+.flap { display: grid; transform-style: preserve-3d; transform-origin: 50% 50%; will-change: transform; }
+.flap > .l { grid-area: 1 / 1; }
+.flap > .k { transform: rotateX(180deg); }
+.flipset.tag .fl-line, .flipset.big .fl-line { line-height: 1.2; }
 .copy { font-weight: 300; font-size: clamp(22px, 2.7vw, 48px); line-height: 1.32; letter-spacing: 0; display: flex; flex-direction: column; gap: clamp(32px, 5vw, 72px); }
 .copy p { text-wrap: pretty; }
 
-/* Work */
-.client { margin-top: clamp(48px, 7vw, 104px); }
-.client:first-of-type { margin-top: clamp(24px, 4vw, 56px); }
-.ct { font-weight: 300; font-size: clamp(30px, 4vw, 68px); line-height: 1.05; letter-spacing: 0; margin-bottom: clamp(20px, 3vw, 40px); }
-.strip { display: flex; gap: clamp(4px, .5vw, 8px); overflow-x: auto; scroll-snap-type: x proximity; scroll-behavior: smooth; scrollbar-width: none; overscroll-behavior-x: contain; -webkit-overflow-scrolling: touch; margin-inline: calc(var(--gutter) * -1); padding-inline: var(--gutter); scroll-padding-inline: var(--gutter); cursor: none; }
+/* Work: one continuous film strip; the client name flips like a clock as you move across it */
+.work { display: flex; flex-direction: column; gap: clamp(18px, 2.6vw, 36px); padding-top: clamp(8px, 2vw, 28px); }
+.flipname { display: flex; position: relative; font-weight: 300; font-size: clamp(34px, 5vw, 84px); line-height: 1; height: 1.14em; letter-spacing: 0; }
+.fc { position: relative; display: block; flex: none; height: 100%; width: 0; perspective: 700px; transition: width .7s var(--ease); --ja: center; }
+.fc > .l, .fc > .flap { position: absolute; inset: 0; }
+.mz { position: absolute; left: 0; top: 0; visibility: hidden; white-space: pre; pointer-events: none; }
+.strip { position: relative; display: flex; gap: clamp(4px, .5vw, 8px); overflow-x: auto; scroll-snap-type: x proximity; scroll-behavior: auto; scrollbar-width: none; overscroll-behavior-x: contain; -webkit-overflow-scrolling: touch; margin-inline: calc(var(--gutter) * -1); padding-inline: var(--gutter); scroll-padding-inline: var(--gutter); cursor: none; }
 .strip::-webkit-scrollbar { display: none; }
-.strip.drag { scroll-behavior: auto; user-select: none; -webkit-user-select: none; }
-.strip img { flex: none; height: clamp(230px, 34vw, 520px); width: auto; max-width: none; display: block; scroll-snap-align: start; background: var(--rule); -webkit-user-drag: none; user-select: none; }
+.strip.drag { user-select: none; -webkit-user-select: none; }
+.strip img { flex: none; height: clamp(240px, 50vh, 560px); width: auto; max-width: none; display: block; scroll-snap-align: start; background: var(--rule); -webkit-user-drag: none; user-select: none; }
 @media (hover: none), (pointer: coarse) { .strip { cursor: auto; } }
+.film-bar { height: 1px; background: var(--rule); position: relative; }
+.film-bar i { position: absolute; left: 0; top: 0; height: 1px; width: 100%; background: var(--fg); transform-origin: 0 50%; transform: scaleX(0); }
+.film-idx { display: flex; flex-wrap: wrap; gap: 4px clamp(20px, 3vw, 44px); }
+.film-idx button { font: inherit; font-size: 12px; font-weight: 400; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); background: none; border: 0; border-bottom: 1px solid transparent; padding: 8px 0; cursor: pointer; transition: color .3s, border-color .3s; }
+.film-idx button:hover { color: var(--fg); }
+.film-idx button[aria-current="true"] { color: var(--fg); border-bottom-color: var(--fg); }
 .cur { position: fixed; left: 0; top: 0; z-index: 70; width: 84px; height: 84px; border-radius: 50%; background: var(--fg); color: var(--bg); display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 400; letter-spacing: 0.16em; text-transform: uppercase; pointer-events: none; opacity: 0; transition: opacity .2s; }
 .cur.on { opacity: 1; }
 
@@ -147,14 +150,11 @@ footer a { text-decoration: none; }
   .brand { font-size: 20px; }
   nav { gap: 14px; }
   nav a { font-size: 11px; letter-spacing: 0.08em; }
-  .s1 { min-height: 56vh; }
+  .s1 { min-height: 40vh; }
   .strip img { height: clamp(210px, 62vw, 340px); }
 }
 @media (prefers-reduced-motion: reduce) {
-  .page.enter .wi, .page.leave .wi, .page.enter .fx, .page.enter #mark, .morph .m-a.out .wi, .morph .m-b.in .wi, .story .morph .wi { animation: none !important; }
-  .story { height: auto; }
-  .story-pin { position: static; height: auto; padding-block: clamp(32px, 6vw, 80px); }
-  .strip { scroll-behavior: auto; }
+  .page.enter .wi, .page.leave .wi, .page.enter .fx, .page.enter #mark { animation: none !important; }
 }
 </style>
 </head>
@@ -178,19 +178,12 @@ footer a { text-decoration: none; }
     <div class="slide s1">
       <h1 class="wordmark" aria-label="WCDO"><span class="mask"><span id="mark">WCDO</span></span></h1>
     </div>
-    <div class="story" id="story">
-      <div class="story-pin">
-        <div class="morph" id="hm" data-s="a">
-          <div class="m-a">
-            <p class="tag" data-t>From Molecule to Market.</p>
-            <p class="tag" data-t>From Drift to Dominance.</p>
-          </div>
-          <div class="m-b">
-            <p class="tag" data-t>We design and execute the path —</p>
-            <p class="tag" data-t>From innovation to value.</p>
-          </div>
-        </div>
+    <div class="slide s2">
+      <div class="flipset tag fx" id="hf" aria-hidden="true">
+        <div class="fl-line" data-a="We design and execute the path —" data-b="From Molecule to Market."></div>
+        <div class="fl-line" data-a="From innovation to value." data-b="From Drift to Dominance."></div>
       </div>
+      <p class="sr">We design and execute the path — From innovation to value. From Molecule to Market. From Drift to Dominance.</p>
     </div>
   </section>
 
@@ -199,10 +192,11 @@ footer a { text-decoration: none; }
     <div class="read">
       <div class="sec">
         <span class="label fx">What we do</span>
-        <div class="morph" id="wm" data-s="a">
-          <h2 class="big m-a" data-t>From Molecule to Market.<br>From Drift to Dominance.</h2>
-          <p class="big m-b" data-t>We design and execute the path —<br>From innovation to value.</p>
+        <div class="flipset big fx" id="wf" aria-hidden="true">
+          <div class="fl-line" data-a="We design and execute the path —" data-b="From Molecule to Market."></div>
+          <div class="fl-line" data-a="From innovation to value." data-b="From Drift to Dominance."></div>
         </div>
+        <p class="sr">We design and execute the path — From innovation to value. From Molecule to Market. From Drift to Dominance.</p>
       </div>
       <div class="sec rule">
         <span class="label fx">Our clients</span>
@@ -216,22 +210,13 @@ footer a { text-decoration: none; }
 
   <!-- WORK -->
   <section class="page" id="p-work" data-page="work" hidden>
-    <section class="client">
-      <h2 class="ct" data-t>THINDOWN</h2>
-      <div class="strip fx" data-name="THINDOWN" tabindex="0" role="group" aria-roledescription="carousel" aria-label="THINDOWN work"><img src="thindown-1.jpg" width="923" height="992" alt="THINDOWN, image 1 of 4" loading="lazy" decoding="async" draggable="false"><img src="thindown-2.jpg" width="930" height="992" alt="THINDOWN, image 2 of 4" loading="lazy" decoding="async" draggable="false"><img src="thindown-3.jpg" width="984" height="992" alt="THINDOWN, image 3 of 4" loading="lazy" decoding="async" draggable="false"><img src="thindown-4.jpg" width="1003" height="992" alt="THINDOWN, image 4 of 4" loading="lazy" decoding="async" draggable="false"></div>
-    </section>
-    <section class="client">
-      <h2 class="ct" data-t>NASA</h2>
-      <div class="strip fx" data-name="NASA" tabindex="0" role="group" aria-roledescription="carousel" aria-label="NASA work"><img src="nasa-1.jpg" width="1011" height="991" alt="NASA, image 1 of 4" loading="lazy" decoding="async" draggable="false"><img src="nasa-2.jpg" width="985" height="991" alt="NASA, image 2 of 4" loading="lazy" decoding="async" draggable="false"><img src="nasa-3.jpg" width="1010" height="991" alt="NASA, image 3 of 4" loading="lazy" decoding="async" draggable="false"><img src="nasa-4.jpg" width="834" height="991" alt="NASA, image 4 of 4" loading="lazy" decoding="async" draggable="false"></div>
-    </section>
-    <section class="client">
-      <h2 class="ct" data-t>RTV</h2>
-      <div class="strip fx" data-name="RTV" tabindex="0" role="group" aria-roledescription="carousel" aria-label="RTV work"><img src="rtv-1.jpg" width="785" height="1000" alt="RTV, image 1 of 5" loading="lazy" decoding="async" draggable="false"><img src="rtv-2.jpg" width="467" height="1000" alt="RTV, image 2 of 5" loading="lazy" decoding="async" draggable="false"><img src="rtv-3.jpg" width="831" height="1000" alt="RTV, image 3 of 5" loading="lazy" decoding="async" draggable="false"><img src="rtv-4.jpg" width="726" height="1000" alt="RTV, image 4 of 5" loading="lazy" decoding="async" draggable="false"><img src="rtv-5.jpg" width="574" height="1000" alt="RTV, image 5 of 5" loading="lazy" decoding="async" draggable="false"></div>
-    </section>
-    <section class="client">
-      <h2 class="ct" data-t>A/VOID</h2>
-      <div class="strip fx" data-name="A/VOID" tabindex="0" role="group" aria-roledescription="carousel" aria-label="A/VOID work"><img src="avoid-1.jpg" width="1883" height="1000" alt="A/VOID, image 1 of 3" loading="lazy" decoding="async" draggable="false"><img src="avoid-2.jpg" width="965" height="1000" alt="A/VOID, image 2 of 3" loading="lazy" decoding="async" draggable="false"><img src="avoid-3.jpg" width="961" height="1000" alt="A/VOID, image 3 of 3" loading="lazy" decoding="async" draggable="false"></div>
-    </section>
+    <div class="work">
+      <div class="film-head fx"><div class="flipname" id="fname" aria-hidden="true"></div></div>
+      <p class="sr" id="fsr" aria-live="polite">THINDOWN</p>
+      <div class="strip film fx" id="film" tabindex="0" role="group" aria-roledescription="carousel" aria-label="Client work, swipe or drag"><img src="thindown-1.jpg" width="923" height="992" alt="THINDOWN, image 1 of 4" data-c="0" data-n="1" data-of="4" data-name="THINDOWN" decoding="async" draggable="false"><img src="thindown-2.jpg" width="930" height="992" alt="THINDOWN, image 2 of 4" data-c="0" data-n="2" data-of="4" data-name="THINDOWN" decoding="async" draggable="false"><img src="thindown-3.jpg" width="984" height="992" alt="THINDOWN, image 3 of 4" data-c="0" data-n="3" data-of="4" data-name="THINDOWN" decoding="async" draggable="false"><img src="thindown-4.jpg" width="1003" height="992" alt="THINDOWN, image 4 of 4" data-c="0" data-n="4" data-of="4" data-name="THINDOWN" loading="lazy" decoding="async" draggable="false"><img src="nasa-1.jpg" width="1011" height="991" alt="NASA, image 1 of 4" data-c="1" data-n="1" data-of="4" data-name="NASA" loading="lazy" decoding="async" draggable="false"><img src="nasa-2.jpg" width="985" height="991" alt="NASA, image 2 of 4" data-c="1" data-n="2" data-of="4" data-name="NASA" loading="lazy" decoding="async" draggable="false"><img src="nasa-3.jpg" width="1010" height="991" alt="NASA, image 3 of 4" data-c="1" data-n="3" data-of="4" data-name="NASA" loading="lazy" decoding="async" draggable="false"><img src="nasa-4.jpg" width="834" height="991" alt="NASA, image 4 of 4" data-c="1" data-n="4" data-of="4" data-name="NASA" loading="lazy" decoding="async" draggable="false"><img src="rtv-1.jpg" width="785" height="1000" alt="RTV, image 1 of 5" data-c="2" data-n="1" data-of="5" data-name="RTV" loading="lazy" decoding="async" draggable="false"><img src="rtv-2.jpg" width="467" height="1000" alt="RTV, image 2 of 5" data-c="2" data-n="2" data-of="5" data-name="RTV" loading="lazy" decoding="async" draggable="false"><img src="rtv-3.jpg" width="831" height="1000" alt="RTV, image 3 of 5" data-c="2" data-n="3" data-of="5" data-name="RTV" loading="lazy" decoding="async" draggable="false"><img src="rtv-4.jpg" width="726" height="1000" alt="RTV, image 4 of 5" data-c="2" data-n="4" data-of="5" data-name="RTV" loading="lazy" decoding="async" draggable="false"><img src="rtv-5.jpg" width="574" height="1000" alt="RTV, image 5 of 5" data-c="2" data-n="5" data-of="5" data-name="RTV" loading="lazy" decoding="async" draggable="false"><img src="avoid-1.jpg" width="1883" height="1000" alt="A/VOID, image 1 of 3" data-c="3" data-n="1" data-of="3" data-name="A/VOID" loading="lazy" decoding="async" draggable="false"><img src="avoid-2.jpg" width="965" height="1000" alt="A/VOID, image 2 of 3" data-c="3" data-n="2" data-of="3" data-name="A/VOID" loading="lazy" decoding="async" draggable="false"><img src="avoid-3.jpg" width="961" height="1000" alt="A/VOID, image 3 of 3" data-c="3" data-n="3" data-of="3" data-name="A/VOID" loading="lazy" decoding="async" draggable="false"></div>
+      <div class="film-bar fx" aria-hidden="true"><i id="fbar"></i></div>
+      <div class="film-idx fx" id="fidx"><button type="button" data-c="0">THINDOWN</button><button type="button" data-c="1">NASA</button><button type="button" data-c="2">RTV</button><button type="button" data-c="3">A/VOID</button></div>
+    </div>
   </section>
 
   <!-- CONTACT -->
@@ -300,58 +285,130 @@ footer a { text-decoration: none; }
   splitAll();
   pages.forEach(function (p) { prep(document.getElementById('p-' + p)); });
 
-  /* What we do: the taglines lift away and the headline rises into the same place */
-  var morph = document.getElementById('wm'), mA = morph.querySelector('.m-a'), mB = morph.querySelector('.m-b'), mTimer = 0;
-  [mA, mB].forEach(function (blk) { blk.querySelectorAll('.wi').forEach(function (w, i) { w.style.setProperty('--k', i); }); });
-  function morphReset() {
-    clearTimeout(mTimer); mA.classList.remove('out', 'in'); mB.classList.remove('out', 'in');
-    morph.setAttribute('data-s', reduce ? 'both' : 'a');
+  /* Flip engine: a panel with a static top, a static bottom and a flap that turns over between them */
+  var EASE = 'cubic-bezier(.5,0,.25,1)';
+  function flapInit(el, txt) {
+    el.innerHTML = '<div class="l t"><span></span></div><div class="l b"><span></span></div><div class="flap"><div class="l f t"><span></span></div><div class="l k b"><span></span></div></div>';
+    var c = el.children, fl = c[2];
+    el._L = { tb: c[0].firstChild, bb: c[1].firstChild, flap: fl, f: fl.children[0].firstChild, k: fl.children[1].firstChild };
+    flapSet(el, txt);
   }
-  function morphStart() {
-    morphReset(); if (reduce) return;
-    mTimer = setTimeout(function () {
-      mA.classList.add('out');
-      mTimer = setTimeout(function () {
-        morph.setAttribute('data-s', 'b'); mA.classList.remove('out'); mB.classList.add('in');
-      }, 780);
-    }, 3400);
+  function flapSet(el, txt) {
+    var L = el._L; L.tb.textContent = L.bb.textContent = L.f.textContent = L.k.textContent = txt; el._cur = txt;
+  }
+  function flapStop(el) { if (el._an) { el._an.cancel(); el._an = null; flapSet(el, el._cur); } el.classList.remove('fl-on'); }
+  function flapGo(el, txt, ms) {
+    if (txt === el._cur) return;
+    flapStop(el);
+    var L = el._L; L.tb.textContent = txt; L.k.textContent = txt; el._cur = txt; el.classList.add('fl-on');
+    var an = L.flap.animate([{ transform: 'rotateX(0deg)' }, { transform: 'rotateX(-180deg)' }], { duration: ms, easing: EASE, fill: 'forwards' });
+    el._an = an;
+    an.onfinish = function () { if (el._an !== an) return; el._an = null; flapSet(el, txt); an.cancel(); el.classList.remove('fl-on'); };
   }
 
-  /* Home: the statement stays pinned while you scroll and swaps in both directions */
-  var story = document.getElementById('story'), hm = document.getElementById('hm');
-  var hA = hm.querySelector('.m-a'), hB = hm.querySelector('.m-b');
-  [hA, hB].forEach(function (blk) { blk.querySelectorAll('.wi').forEach(function (w, i) { w.style.setProperty('--k', i); }); });
-  var hState = 'a', hWant = 'a', hBusy = false, hT1 = 0, hT2 = 0;
-  function storyReset() {
-    clearTimeout(hT1); clearTimeout(hT2); hState = 'a'; hWant = 'a'; hBusy = false;
-    ['so-up', 'so-down', 'si-up', 'si-down'].forEach(function (c) { hA.classList.remove(c); hB.classList.remove(c); });
-    hm.setAttribute('data-s', reduce ? 'both' : 'a');
+  /* The statements: "We design..." first, then "From Molecule...", and back, slowly and for as long as you stay */
+  function Flipper(root) {
+    var lines = [].slice.call(root.querySelectorAll('.fl-line'));
+    var ts = lines.map(function (l) { return [l.getAttribute('data-a'), l.getAttribute('data-b')]; });
+    if (reduce) {
+      root.innerHTML = ts.map(function (t) { return t[0]; }).concat(ts.map(function (t) { return t[1]; })).map(function (t, i) {
+        return '<p' + (i === ts.length ? ' style="margin-top:1em"' : '') + '>' + t + '</p>';
+      }).join('');
+      return { start: function () {}, stop: function () {} };
+    }
+    lines.forEach(function (l, i) { flapInit(l, ts[i][0]); });
+    var st = 0, tm = 0, tms = [], FLIP = 1300, STAG = 380, HOLD = 4400;
+    function clear() { clearTimeout(tm); tms.forEach(clearTimeout); tms = []; }
+    function cycle() {
+      st = st ? 0 : 1;
+      lines.forEach(function (l, i) { tms.push(setTimeout(function () { flapGo(l, ts[i][st], FLIP); }, i * STAG)); });
+      tm = setTimeout(cycle, FLIP + (lines.length - 1) * STAG + HOLD);
+    }
+    return {
+      start: function () { clear(); st = 0; lines.forEach(function (l, i) { flapStop(l); flapSet(l, ts[i][0]); }); tm = setTimeout(cycle, 3200); },
+      stop: clear
+    };
   }
-  function storyStep() {
-    if (hBusy || hWant === hState || reduce) return;
-    hBusy = true;
-    var tgt = hWant, down = tgt === 'b', out = down ? hA : hB, inn = down ? hB : hA, dir = down ? 'up' : 'down';
-    out.classList.add('so-' + dir);
-    hT1 = setTimeout(function () {
-      hm.setAttribute('data-s', tgt); out.classList.remove('so-' + dir); inn.classList.add('si-' + dir); hState = tgt;
-      hT2 = setTimeout(function () { inn.classList.remove('si-' + dir); hBusy = false; storyStep(); }, 1250);
-    }, 640);
+  var homeF = Flipper(document.getElementById('hf')), wwdF = Flipper(document.getElementById('wf'));
+  function flipFor(h) {
+    homeF.stop(); wwdF.stop();
+    if (h === 'home') homeF.start(); else if (h === 'what-we-do') wwdF.start();
   }
-  function storyScroll() {
-    if (current !== 'home' || reduce) return;
-    var hh = document.querySelector('.bar').offsetHeight, r = story.getBoundingClientRect();
-    var span = r.height - (window.innerHeight - hh);
-    var pr = span > 0 ? (hh - r.top) / span : 0;
-    pr = Math.max(0, Math.min(1, pr));
-    if (hWant === 'a' && pr > 0.55) hWant = 'b'; else if (hWant === 'b' && pr < 0.45) hWant = 'a';
-    storyStep();
+
+  /* Work: all the images sit on one film strip; the name above flips letter by letter as the strip moves */
+  var film = document.getElementById('film'), fname = document.getElementById('fname'), fbar = document.getElementById('fbar');
+  var fidx = document.getElementById('fidx'), fsr = document.getElementById('fsr');
+  var fimgs = [].slice.call(film.querySelectorAll('img'));
+  var fbtns = [].slice.call(fidx.querySelectorAll('button'));
+  var cNames = fbtns.map(function (b) { return b.textContent; });
+  var NCELL = Math.max.apply(null, cNames.map(function (n) { return n.length; }));
+  var cells = [], mz = null, wcache = {}, cActive = -1, nTimers = [];
+  function cw(ch) {
+    if (ch === ' ') return 0;
+    if (wcache[ch] == null) { mz.textContent = ch; wcache[ch] = mz.getBoundingClientRect().width; }
+    return wcache[ch];
   }
-  var sTick = false;
-  window.addEventListener('scroll', function () {
-    if (sTick) return; sTick = true;
-    requestAnimationFrame(function () { sTick = false; storyScroll(); });
+  function buildName() {
+    nTimers.forEach(clearTimeout); nTimers = [];
+    fname.innerHTML = ''; mz = document.createElement('span'); mz.className = 'mz'; fname.appendChild(mz);
+    wcache = {}; cells = []; cActive = -1;
+    for (var i = 0; i < NCELL; i++) {
+      var c = document.createElement('span'); c.className = 'fc'; c.style.transition = 'none'; c.style.width = '0px';
+      fname.appendChild(c); flapInit(c, ' '); cells.push(c);
+    }
+    void fname.offsetWidth; cells.forEach(function (c) { c.style.transition = ''; });
+  }
+  function remeasure() {
+    if (!mz) return; wcache = {};
+    cells.forEach(function (c) { c.style.transition = 'none'; c.style.width = cw(c._cur) + 'px'; });
+    void fname.offsetWidth; cells.forEach(function (c) { c.style.transition = ''; });
+  }
+  function setName(txt) {
+    nTimers.forEach(clearTimeout); nTimers = [];
+    var chars = (txt + new Array(NCELL + 1).join(' ')).slice(0, NCELL).split('');
+    cells.forEach(function (c, i) {
+      var go = function () { c.style.width = cw(chars[i]) + 'px'; flapGo(c, chars[i], 700); };
+      if (reduce) { c.style.transition = 'none'; flapSet(c, chars[i]); c.style.width = cw(chars[i]) + 'px'; }
+      else nTimers.push(setTimeout(go, i * 80));
+    });
+  }
+  function activeClient() {
+    var max = film.scrollWidth - film.clientWidth, sl = film.scrollLeft;
+    if (sl <= 2) return +fimgs[0].getAttribute('data-c');
+    if (sl >= max - 2) return +fimgs[fimgs.length - 1].getAttribute('data-c');
+    var x = sl + film.clientWidth * 0.33, c = +fimgs[0].getAttribute('data-c');
+    for (var i = 0; i < fimgs.length; i++) { if (fimgs[i].offsetLeft <= x) c = +fimgs[i].getAttribute('data-c'); else break; }
+    return c;
+  }
+  function filmUpdate() {
+    if (current !== 'work' || !cells.length) return;
+    var c = activeClient();
+    if (c !== cActive) {
+      cActive = c; setName(cNames[c]); fsr.textContent = cNames[c];
+      fbtns.forEach(function (b, i) { b.setAttribute('aria-current', i === c ? 'true' : 'false'); });
+    }
+    fbar.style.transform = 'scaleX(' + Math.min(1, (film.scrollLeft + film.clientWidth) / Math.max(1, film.scrollWidth)) + ')';
+  }
+  var fTick = false;
+  film.addEventListener('scroll', function () {
+    if (fTick) return; fTick = true;
+    requestAnimationFrame(function () { fTick = false; filmUpdate(); });
   }, { passive: true });
-  window.addEventListener('resize', storyScroll);
+  function workEnter() {
+    film.scrollLeft = 0; buildName(); filmUpdate();
+  }
+  fidx.addEventListener('click', function (e) {
+    var b = e.target.closest('button'); if (!b) return;
+    var c = +b.getAttribute('data-c'), im = fimgs.filter(function (i) { return +i.getAttribute('data-c') === c; })[0];
+    film.scrollTo({ left: Math.max(0, im.offsetLeft - parseFloat(getComputedStyle(film).paddingLeft)), behavior: reduce ? 'auto' : 'smooth' });
+  });
+  document.addEventListener('wheel', function (e) {
+    if (current !== 'work' || lbOpen() || !e.target.closest || !e.target.closest('.film')) return;
+    if (document.documentElement.scrollHeight > window.innerHeight + 2) return;
+    if (Math.abs(e.deltaY) > Math.abs(e.deltaX)) { film.scrollLeft += e.deltaY; e.preventDefault(); }
+  }, { passive: false });
+  window.addEventListener('resize', function () { if (current === 'work') { remeasure(); filmUpdate(); } });
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(function () { if (current === 'work') remeasure(); });
 
   function pageEl(h) { return document.getElementById('p-' + h); }
   function hashPage() { var h = (location.hash || '').replace('#', ''); return pages.indexOf(h) < 0 ? 'home' : h; }
@@ -363,9 +420,9 @@ footer a { text-decoration: none; }
   function show(h) {
     pages.forEach(function (p) { var el = pageEl(p); el.hidden = p !== h; el.classList.remove('leave'); el.classList.remove('enter'); });
     body.setAttribute('data-page', h); current = h; closeLb();
-    if (h === 'what-we-do') morphStart(); else morphReset();
-    storyReset();
+    flipFor(h);
     window.scrollTo(0, 0);
+    if (h === 'work') workEnter();
     var pg = pageEl(h); void pg.offsetWidth;
     if (!reduce) pg.classList.add('enter');
   }
@@ -467,11 +524,10 @@ footer a { text-decoration: none; }
   function lbOpen() { return !lb.hidden; }
   function fillLb() {
     var im = items[idx]; lbImg.src = im.currentSrc || im.src; lbImg.alt = im.alt;
-    lbCap.textContent = lbName + '  ' + two(idx + 1) + ' / ' + two(items.length);
+    lbCap.textContent = im.getAttribute('data-name') + '  ' + two(+im.getAttribute('data-n')) + ' / ' + two(+im.getAttribute('data-of'));
   }
   function openLb(im) {
-    var s = im.closest('.strip'); items = [].slice.call(s.querySelectorAll('img')); idx = items.indexOf(im);
-    lbName = s.getAttribute('data-name') || ''; fillLb();
+    items = fimgs; idx = items.indexOf(im); fillLb();
     lastFocus = document.activeElement; lb.hidden = false; cur.classList.remove('on');
     document.getElementById('lb-x').focus();
   }
