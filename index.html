@@ -117,11 +117,11 @@ body.flying #mark { animation: none !important; }
 .flipset.tag .fl-line, .flipset.big .fl-line { line-height: 1.2; }
 .copy { font-weight: 300; font-size: clamp(22px, 2.7vw, 48px); line-height: 1.32; letter-spacing: 0; display: flex; flex-direction: column; gap: clamp(28px, 4vw, 56px); }
 .copy p { text-wrap: pretty; }
-.steps { display: flex; align-items: flex-end; gap: 3.9%; }
-.step { display: flex; align-items: flex-end; justify-content: center; text-align: center; border: 1px solid var(--fg); font-weight: 400; font-size: clamp(14px, 2.1vw, 40px); line-height: 1.2; padding-inline: 12px; padding-bottom: calc(clamp(68px, 7.5vw, 140px) / 2 - 0.6em); }
-.step:nth-child(1) { width: 20.2%; height: clamp(68px, 7.5vw, 140px); }
-.step:nth-child(2) { width: 24%; height: clamp(90px, 9.9vw, 184px); }
-.step:nth-child(3) { width: 28.4%; height: clamp(112px, 12.6vw, 234px); }
+.steps { display: flex; align-items: flex-end; gap: clamp(8px, 3.6vw, 70px); }
+.step { display: flex; align-items: flex-end; justify-content: center; padding-bottom: calc(clamp(64px, 7vw, 130px) / 2 - 0.6em); text-align: center; border: 1px solid var(--fg); font-weight: 400; font-size: clamp(15px, 2.4vw, 44px); line-height: 1.2; padding-inline: 12px; }
+.step:nth-child(1) { width: 19%; height: clamp(64px, 7vw, 130px); }
+.step:nth-child(2) { width: 22.5%; height: clamp(84px, 9.3vw, 170px); }
+.step:nth-child(3) { width: 26.5%; height: clamp(104px, 11.8vw, 215px); }
 
 /* Work: one continuous film strip; the client name flips like a clock as you move across it */
 .work { display: flex; flex-direction: column; gap: clamp(18px, 2.6vw, 36px); padding-top: clamp(8px, 2vw, 28px); }
